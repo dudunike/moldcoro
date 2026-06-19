@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Molds&amp;Coros</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0f1117;
+      color: #e2e8f0;
+      font-family: system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .card {
+      background: #1a1d27;
+      border: 1px solid #2d3148;
+      border-radius: 16px;
+      padding: 3rem 2.5rem;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    }
+    .brand { text-align: center; margin-bottom: 2rem; }
+    .brand-name {
+      font-size: 2rem; font-weight: 700; color: #fff;
+      font-family: Georgia, serif; letter-spacing: -0.02em;
+    }
+    .brand-name span { color: #C8832A; }
+    .brand-sub {
+      font-size: 0.8rem; color: #64748b; margin-top: 0.3rem;
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .divider {
+      width: 40px; height: 2px;
+      background: linear-gradient(to right, #C8832A, #A0522D);
+      margin: 0 auto 2rem; border-radius: 2px;
+    }
+    .field { margin-bottom: 1.25rem; }
+    label {
+      display: block; font-size: 0.82rem; font-weight: 600;
+      color: #64748b; margin-bottom: 0.45rem;
+    }
+    input {
+      width: 100%; background: #0d0f18;
+      border: 1px solid #2d3148; border-radius: 8px;
+      padding: 0.85rem 1rem; color: #e2e8f0; font-size: 0.97rem;
+      outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    input:focus { border-color: #C8832A; box-shadow: 0 0 0 3px rgba(200,131,42,0.15); }
+    .btn-login {
+      width: 100%; background: #C8832A; color: #fff; border: none;
+      border-radius: 8px; padding: 1rem; font-size: 0.97rem;
+      font-weight: 700; cursor: pointer; margin-top: 0.5rem;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn-login:hover   { background: #b5711f; }
+    .btn-login:active  { transform: scale(0.98); }
+    .btn-login:disabled { opacity: 0.5; cursor: not-allowed; }
+    .error-box {
+      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
+      color: #f87171; border-radius: 8px; padding: 0.9rem 1rem;
+      font-size: 0.86rem; margin-top: 1rem; display: none;
+    }
+    .footer-note { text-align: center; font-size: 0.76rem; color: #334155; margin-top: 2rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand">
+      <div class="brand-name">Molds<span>&amp;</span>Coros</div>
+      <div class="brand-sub">Painel Analytics</div>
+    </div>
+    <div class="divider"></div>
+
+    <form id="loginForm">
+      <div class="field">
+        <label>E-mail</label>
+        <input type="email" id="email" value="eduardoeustaquio369@gmail.com" readonly />
+      </div>
+      <div class="field">
+        <label>Senha</label>
+        <input type="password" id="password" placeholder="••••••••" autofocus required />
+      </div>
+      <button type="submit" class="btn-login" id="loginBtn">Entrar no painel</button>
+      <div class="error-box" id="errBox">Senha incorreta. Tente novamente.</div>
+    </form>
+
+    <div class="footer-note">Molds&amp;Coros · Acesso restrito</div>
+  </div>
+
+  <script src="config_admin.js"></script>
+  <script>
+    /* Já tem sessão ativa? */
+    if (sessionStorage.getItem('mc_admin_ok') === '1') {
+      window.location.href = 'dashboard.html';
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var btn  = document.getElementById('loginBtn');
+      var err  = document.getElementById('errBox');
+      var pass = document.getElementById('password').value;
+
+      err.style.display = 'none';
+      btn.disabled    = true;
+      btn.textContent = 'Verificando...';
+
+      /* Hash SHA-256 da senha digitada */
+      var encoded = new TextEncoder().encode(pass);
+      var buf     = await crypto.subtle.digest('SHA-256', encoded);
+      var hash    = Array.from(new Uint8Array(buf))
+                      .map(function(b) { return b.toString(16).padStart(2,'0'); })
+                      .join('');
+
+      if (hash === ADMIN_PASSWORD_HASH) {
+        sessionStorage.setItem('mc_admin_ok', '1');
+        window.location.href = 'dashboard.html';
+      } else {
+        err.style.display = 'block';
+        btn.disabled    = false;
+        btn.textContent = 'Entrar no painel';
+        document.getElementById('password').value = '';
+        document.getElementById('password').focus();
+      }
+    });
+  </script>
+</body>
+</html>

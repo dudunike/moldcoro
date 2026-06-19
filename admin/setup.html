@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setup Admin — Molds&amp;Coros</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0f1117;
+      color: #e2e8f0;
+      font-family: system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .card {
+      background: #1a1d27;
+      border: 1px solid #2d3148;
+      border-radius: 12px;
+      padding: 2.5rem;
+      max-width: 520px;
+      width: 100%;
+    }
+    .logo { font-size: 1.5rem; font-weight: 700; color: #C8832A; margin-bottom: 0.25rem; font-family: Georgia, serif; }
+    h1 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .sub { font-size: 0.85rem; color: #64748b; margin-bottom: 1.5rem; }
+
+    .steps { margin-bottom: 1.75rem; }
+    .step {
+      display: flex;
+      gap: 0.85rem;
+      margin-bottom: 1rem;
+      align-items: flex-start;
+    }
+    .num {
+      min-width: 28px; height: 28px;
+      background: #C8832A; color: #fff;
+      border-radius: 50%; font-size: 0.8rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .step-body { font-size: 0.88rem; color: #94a3b8; line-height: 1.65; }
+    .step-body strong { color: #e2e8f0; }
+    .step-body a {
+      color: #C8832A;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .img-hint {
+      background: #0d0f18;
+      border: 1px solid #2d3148;
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-top: 0.5rem;
+      font-family: monospace;
+      line-height: 1.8;
+    }
+    .img-hint span { color: #C8832A; font-weight: 700; }
+
+    .divider { height: 1px; background: #2d3148; margin: 1.5rem 0; }
+
+    label { display: block; font-size: 0.82rem; font-weight: 600; color: #94a3b8; margin-bottom: 0.4rem; }
+    input {
+      width: 100%;
+      background: #0d0f18;
+      border: 1px solid #2d3148;
+      border-radius: 7px;
+      padding: 0.75rem 1rem;
+      color: #e2e8f0;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    input:focus { border-color: #C8832A; }
+
+    .btn {
+      width: 100%;
+      background: #C8832A;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 0.9rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn:hover { background: #b5711f; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .msg { margin-top: 1rem; padding: 0.9rem; border-radius: 7px; font-size: 0.88rem; line-height: 1.65; }
+    .msg.success { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+    .msg.error   { background: rgba(239,68,68,0.12);  color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    .msg.warn    { background: rgba(234,179,8,0.1);   color: #fde68a; border: 1px solid rgba(234,179,8,0.3); }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">Molds<span style="color:#555">&amp;</span>Coros</div>
+  <h1>Configuração inicial do painel admin</h1>
+  <p class="sub">Crie o usuário diretamente no Supabase — não é necessário formulário de cadastro.</p>
+
+  <div class="steps">
+
+    <div class="step">
+      <div class="num">1</div>
+      <div class="step-body">
+        <strong>Crie o usuário no Supabase Dashboard</strong><br>
+        Acesse
+        <a href="https://supabase.com/dashboard/project/dqeyevscnuyqbwdhkqsv/auth/users" target="_blank">
+          Authentication → Users
+        </a>
+        e clique em <strong>"Add user" → "Create new user"</strong>.
+        <div class="img-hint">
+          Email: <span>eduardoeustaquio369@gmail.com</span><br>
+          Password: <span>sua senha</span><br>
+          ✅ Marque <span>"Auto Confirm User"</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">2</div>
+      <div class="step-body">
+        <strong>Execute o SQL das tabelas</strong><br>
+        Acesse o
+        <a href="https://supabase.com/dashboard/project/dqeyevscnuyqbwdhkqsv/sql" target="_blank">
+          SQL Editor
+        </a>
+        e cole + execute o conteúdo do arquivo <strong>admin/database.sql</strong>.
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">3</div>
+      <div class="step-body">
+        <strong>Teste o login abaixo</strong><br>
+        Digite a senha que você usou no passo 1 e clique em Testar. Se funcionar, vá para o painel.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <div id="testSection">
+    <label for="email">E-mail</label>
+    <input type="email" id="email" value="eduardoeustaquio369@gmail.com" readonly />
+
+    <label for="password">Senha (a mesma que você colocou no Supabase)</label>
+    <input type="password" id="password" placeholder="Digite sua senha" required />
+
+    <button class="btn" id="testBtn" onclick="testLogin()">Testar login</button>
+  </div>
+
+  <div id="msg"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../config.js"></script>
+<script>
+  var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  function testLogin() {
+    var btn  = document.getElementById('testBtn');
+    var pass = document.getElementById('password').value;
+    var email = document.getElementById('email').value.trim();
+
+    if (!pass) { showMsg('Digite a senha.', 'warn'); return; }
+
+    btn.disabled    = true;
+    btn.textContent = 'Testando...';
+
+    sb.auth.signInWithPassword({ email: email, password: pass })
+      .then(function (res) {
+        btn.disabled    = false;
+        btn.textContent = 'Testar login';
+
+        if (res.error) {
+          var msg = res.error.message || '';
+          if (msg.toLowerCase().includes('invalid') || msg.toLowerCase().includes('credentials')) {
+            showMsg('❌ Senha incorreta. Verifique a senha que você colocou no Supabase Dashboard.', 'error');
+          } else if (msg.toLowerCase().includes('not found') || msg.toLowerCase().includes('no user')) {
+            showMsg('❌ Usuário não encontrado. Volte ao passo 1 e crie o usuário no Supabase Dashboard.', 'error');
+          } else {
+            showMsg('❌ Erro: ' + msg, 'error');
+          }
+          return;
+        }
+
+        sb.auth.signOut();
+        showMsg(
+          '✅ <strong>Login funcionou!</strong> Tudo certo.<br><br>' +
+          '<a href="index.html" style="color:#4ade80;font-weight:700;font-size:1.05rem">→ Ir para o painel agora</a>',
+          'success'
+        );
+        document.getElementById('testSection').style.display = 'none';
+      })
+      .catch(function (ex) {
+        btn.disabled    = false;
+        btn.textContent = 'Testar login';
+        showMsg('❌ Erro de conexão: ' + (ex.message || ex), 'error');
+      });
+  }
+
+  function showMsg(html, type) {
+    var el = document.getElementById('msg');
+    el.className = 'msg ' + type;
+    el.innerHTML = html;
+  }
+
+  /* Enter para testar */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') testLogin();
+  });
+</script>
+</body>
+</html>

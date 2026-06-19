@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Molds&amp;Coros Analytics</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+<div class="admin-layout">
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-name">Molds<span>&amp;</span>Coros</div>
+      <div class="sidebar-brand-sub">Analytics</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Visão geral</div>
+      <div class="nav-item active" data-section="overview">
+        <span class="icon">📊</span> Dashboard
+      </div>
+      <div class="nav-item" data-section="funnel">
+        <span class="icon">🔽</span> Funil
+      </div>
+      <div class="nav-item" data-section="heatmap">
+        <span class="icon">🔥</span> Mapa de Calor
+      </div>
+
+      <div class="nav-section-label">Vendas</div>
+      <div class="nav-item" data-section="sales">
+        <span class="icon">💰</span> Vendas &amp; Receita
+      </div>
+
+      <div class="nav-section-label">Tráfego</div>
+      <div class="nav-item" data-section="traffic">
+        <span class="icon">📈</span> Tráfego &amp; Origens
+      </div>
+      <div class="nav-item" data-section="devices">
+        <span class="icon">📱</span> Dispositivos
+      </div>
+
+      <div class="nav-section-label">Configurações</div>
+      <div class="nav-item" data-section="settings">
+        <span class="icon">⚙️</span> Pixel &amp; Analytics
+      </div>
+      <div class="nav-item" data-section="webhook">
+        <span class="icon">🔗</span> Webhook Vendas
+      </div>
+      <div class="nav-item" data-section="manage">
+        <span class="icon">🗑️</span> Gerenciar Dados
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-logout" id="btnLogout">
+        <span class="icon">🚪</span> Sair
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===================== MAIN ===================== -->
+  <div class="main-content">
+
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
+
+      <div class="period-tabs">
+        <button class="period-tab" data-period="1">Hoje</button>
+        <button class="period-tab active" data-period="7">7 dias</button>
+        <button class="period-tab" data-period="30">30 dias</button>
+        <button class="period-tab" data-period="custom">Período</button>
+      </div>
+
+      <div class="custom-range" id="customRange" style="display:none">
+        <input type="date" id="dateFrom" />
+        <span>até</span>
+        <input type="date" id="dateTo" />
+        <button class="btn-refresh" id="applyRange">Aplicar</button>
+      </div>
+
+      <div class="topbar-right">
+        <button class="btn-refresh" id="btnRefresh">↺ Atualizar</button>
+      </div>
+    </div>
+
+    <!-- ===== OVERVIEW ===== -->
+    <section class="page-section active" id="section-overview">
+
+      <!-- Cards de receita (linha de destaque) -->
+      <div class="revenue-banner">
+        <div class="rev-card rev-total">
+          <div class="rev-label">Receita total</div>
+          <div class="rev-value" id="statRevTotal">R$ —</div>
+          <div class="rev-sub" id="statRevSales">— vendas</div>
+        </div>
+        <div class="rev-card">
+          <div class="rev-label">Produto principal</div>
+          <div class="rev-value green" id="statRevMain">R$ —</div>
+          <div class="rev-sub" id="statRevMainQty">— vendas</div>
+        </div>
+        <div class="rev-card">
+          <div class="rev-label">Order Bump</div>
+          <div class="rev-value gold" id="statRevBump">R$ —</div>
+          <div class="rev-sub" id="statRevBumpQty">— vendas</div>
+        </div>
+        <div class="rev-card">
+          <div class="rev-label">Upsell</div>
+          <div class="rev-value" style="color:#a78bfa" id="statRevUpsell">R$ —</div>
+          <div class="rev-sub" id="statRevUpsellQty">— vendas</div>
+        </div>
+        <div class="rev-card">
+          <div class="rev-label">Downsell</div>
+          <div class="rev-value" style="color:#94a3b8" id="statRevDownsell">R$ —</div>
+          <div class="rev-sub" id="statRevDownsellQty">— vendas</div>
+        </div>
+        <div class="rev-card">
+          <div class="rev-label">Ticket médio</div>
+          <div class="rev-value gold" id="statAvgTicket">R$ —</div>
+          <div class="rev-sub">por venda</div>
+        </div>
+      </div>
+
+      <div class="overview-grid">
+        <div class="metric-card">
+          <div class="metric-label">Visitantes únicos</div>
+          <div class="metric-value" id="statSessions">—</div>
+          <div class="metric-sub">sessões distintas</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Visualizações</div>
+          <div class="metric-value" id="statViews">—</div>
+          <div class="metric-sub">page views</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Taxa de conversão</div>
+          <div class="metric-value green" id="statConversion">—</div>
+          <div class="metric-sub">cliques no botão CTA</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Conv. em venda</div>
+          <div class="metric-value green" id="statSaleConv">—</div>
+          <div class="metric-sub">visitantes → compradores</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Tempo médio</div>
+          <div class="metric-value gold" id="statAvgTime">—</div>
+          <div class="metric-sub">na página</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Scroll médio</div>
+          <div class="metric-value" id="statAvgScroll">—</div>
+          <div class="metric-sub">da página percorrida</div>
+        </div>
+      </div>
+
+      <!-- Mini funil na overview -->
+      <div class="funnel-container">
+        <div class="section-title">Funil rápido <small>seções alcançadas</small></div>
+        <div id="overviewFunnel">
+          <div class="loading-overlay"><div class="spinner"></div> Carregando...</div>
+        </div>
+      </div>
+
+      <!-- Two col: cliques por seção + referrers -->
+      <div class="two-col">
+        <div class="panel">
+          <div class="section-title">Cliques por seção</div>
+          <div id="clicksBySection">
+            <div class="loading-overlay"><div class="spinner"></div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="section-title">Origem do tráfego</div>
+          <div id="referrerPanel">
+            <div class="loading-overlay"><div class="spinner"></div></div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===== FUNIL ===== -->
+    <section class="page-section" id="section-funnel">
+      <div class="funnel-container" style="margin-bottom:0">
+        <div class="section-title">Funil de conversão <small>% de visitantes por etapa</small></div>
+        <div id="fullFunnel">
+          <div class="loading-overlay"><div class="spinner"></div> Carregando...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== HEATMAP ===== -->
+    <section class="page-section" id="section-heatmap">
+      <div class="heatmap-container">
+        <div class="section-title">Mapa de calor — Cliques na página</div>
+
+        <div class="heatmap-wrap">
+          <div class="heatmap-page-mock" id="heatmapMock">
+            <!-- mock sections visual reference -->
+            <div class="mock-section" style="top:0;height:8.3%">HERO</div>
+            <div class="mock-section" style="top:8.3%;height:8.3%">AUDIÊNCIA</div>
+            <div class="mock-section" style="top:16.6%;height:8.3%">PROBLEMA</div>
+            <div class="mock-section" style="top:25%;height:8.3%">COMO FUNCIONA</div>
+            <div class="mock-section" style="top:33.3%;height:8.3%">PRODUTO</div>
+            <div class="mock-section" style="top:41.6%;height:8.3%">CONTEÚDO</div>
+            <div class="mock-section" style="top:50%;height:8.3%">BÔNUS</div>
+            <div class="mock-section" style="top:58.3%;height:8.3%">LUCRATIVO</div>
+            <div class="mock-section" style="top:66.6%;height:8.3%">PARA QUEM</div>
+            <div class="mock-section" style="top:75%;height:8.3%">OFERTA</div>
+            <div class="mock-section" style="top:83.3%;height:8.3%">FAQ</div>
+            <div class="mock-section" style="top:91.6%;height:8.4%">CTA FINAL</div>
+            <canvas class="heatmap-canvas" id="heatmapCanvas"></canvas>
+          </div>
+        </div>
+
+        <div class="heatmap-legend">
+          <span>Frio</span>
+          <div class="heatmap-legend-bar"></div>
+          <span>Quente</span>
+        </div>
+
+        <div style="text-align:center;font-size:0.82rem;color:var(--text-muted);margin-top:1rem" id="heatmapInfo">
+          Carregando dados de clique...
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TRAFFIC ===== -->
+    <section class="page-section" id="section-traffic">
+      <div class="two-col">
+        <div class="panel">
+          <div class="section-title">Origem do tráfego</div>
+          <div id="trafficReferrers">
+            <div class="loading-overlay"><div class="spinner"></div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="section-title">Scroll — distribuição de profundidade</div>
+          <div id="scrollDepthPanel">
+            <div class="loading-overlay"><div class="spinner"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== DEVICES ===== -->
+    <section class="page-section" id="section-devices">
+      <div class="panel" style="max-width:480px">
+        <div class="section-title">Dispositivos</div>
+        <div id="devicesPanel">
+          <div class="loading-overlay"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SETTINGS ===== -->
+    <section class="page-section" id="section-settings">
+      <div class="settings-grid">
+
+        <div class="settings-panel">
+          <h3>Facebook Pixel</h3>
+          <p>O Pixel será carregado automaticamente na landing page quando o visitante acessar a página.</p>
+          <div class="field-row">
+            <label>Pixel ID</label>
+            <input type="text" id="facebookPixelId" placeholder="Ex: 1234567890123456" />
+          </div>
+          <button class="btn-save" onclick="saveSetting('facebook_pixel_id', 'facebookPixelId', 'fbSaveOk')">Salvar</button>
+          <span class="save-ok" id="fbSaveOk">✓ Salvo</span>
+        </div>
+
+        <div class="settings-panel">
+          <h3>Google Analytics (GA4)</h3>
+          <p>ID de medição do GA4 (começa com G-). Será carregado automaticamente na landing page.</p>
+          <div class="field-row">
+            <label>ID de Medição</label>
+            <input type="text" id="googleAnalyticsId" placeholder="Ex: G-XXXXXXXXXX" />
+          </div>
+          <button class="btn-save" onclick="saveSetting('google_analytics_id', 'googleAnalyticsId', 'gaSaveOk')">Salvar</button>
+          <span class="save-ok" id="gaSaveOk">✓ Salvo</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== SALES ===== -->
+    <section class="page-section" id="section-sales">
+
+      <!-- Cards resumo -->
+      <div class="revenue-banner" style="margin-bottom:1.5rem">
+        <div class="rev-card rev-total">
+          <div class="rev-label">Receita total</div>
+          <div class="rev-value" id="saleRevTotal">R$ —</div>
+          <div class="rev-sub" id="saleQtyTotal">— vendas</div>
+        </div>
+        <div class="rev-card">
+          <div class="rev-label">Produto principal</div>
+          <div class="rev-value green" id="saleRevMain">R$ —</div>
+          <div class="rev-sub" id="saleQtyMain">—</div>
+        </div>
+        <div class="rev-card">
+          <div class="rev-label">Order Bump</div>
+          <div class="rev-value gold" id="saleRevBump">R$ —</div>
+          <div class="rev-sub" id="saleQtyBump">—</div>
+        </div>
+        <div class="rev-card">
+          <div class="rev-label">Upsell</div>
+          <div class="rev-value" style="color:#a78bfa" id="saleRevUpsell">R$ —</div>
+          <div class="rev-sub" id="saleQtyUpsell">—</div>
+        </div>
+        <div class="rev-card">
+          <div class="rev-label">Downsell</div>
+          <div class="rev-value" style="color:#94a3b8" id="saleRevDownsell">R$ —</div>
+          <div class="rev-sub" id="saleQtyDownsell">—</div>
+        </div>
+        <div class="rev-card">
+          <div class="rev-label">Ticket médio</div>
+          <div class="rev-value gold" id="saleAvgTicket">R$ —</div>
+          <div class="rev-sub">por venda</div>
+        </div>
+      </div>
+
+      <!-- Tabela de vendas -->
+      <div class="panel" style="overflow-x:auto">
+        <div class="section-title" style="display:flex;align-items:center;justify-content:space-between">
+          Vendas individuais
+          <button class="btn-save" style="font-size:0.8rem;padding:0.4rem 1rem" onclick="openAddSaleModal()">+ Adicionar manual</button>
+        </div>
+        <div id="salesTable">
+          <div class="loading-overlay"><div class="spinner"></div> Carregando...</div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===== WEBHOOK ===== -->
+    <section class="page-section" id="section-webhook">
+      <div class="settings-grid">
+
+        <!-- STATUS + URL -->
+        <div class="settings-panel" style="grid-column:1/-1">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.25rem">
+            <div>
+              <h3 style="margin:0 0 0.25rem">Webhook de Vendas</h3>
+              <p style="margin:0;font-size:0.82rem;color:var(--text-muted)">Recebe notificações automáticas das plataformas de pagamento</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <div id="webhookStatusBadge" style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.9rem;border-radius:20px;font-size:0.82rem;font-weight:600;background:#1e2535;border:1px solid var(--border)">
+                <span id="webhookStatusDot" style="width:8px;height:8px;border-radius:50%;background:#6b7280;display:inline-block"></span>
+                <span id="webhookStatusText">Verificando…</span>
+              </div>
+              <button class="btn-save" style="padding:0.4rem 0.9rem;font-size:0.82rem" onclick="checkWebhookStatus()">Verificar</button>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <label>URL do Webhook — cole esta URL na sua plataforma de pagamento</label>
+            <div style="display:flex;gap:0.5rem">
+              <input type="text" id="webhookUrl" readonly
+                value="https://dqeyevscnuyqbwdhkqsv.supabase.co/rest/v1/rpc/receive_webhook?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRxZXlldnNjbnV5cWJ3ZGhrcXN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDU4MDcsImV4cCI6MjA4ODQyMTgwN30.KVcEEsCnCDEVm384qNEhLq6f8e2MGqbRtu6hLZien1M"
+                style="font-size:0.72rem;cursor:pointer;font-family:monospace" onclick="this.select()" />
+              <button class="btn-save" style="white-space:nowrap;padding:0 1rem" onclick="copyWebhookUrl()">Copiar URL</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SETUP SQL — aparece quando função não existe -->
+        <div class="settings-panel" id="deployAlertPanel" style="grid-column:1/-1;border:2px solid var(--gold);display:none">
+          <div style="display:flex;gap:1rem;align-items:flex-start">
+            <span style="font-size:2rem;line-height:1">🔧</span>
+            <div style="flex:1">
+              <h3 style="color:var(--gold);margin-bottom:0.5rem">Configure o webhook em 2 passos — só precisa fazer uma vez</h3>
+              <p style="margin-bottom:1.25rem;color:var(--text-muted)">
+                Diferente de Edge Functions, este método é uma função SQL direta — <strong>não precisa de CLI, Docker ou token especial</strong>. Apenas um SQL que você executa no painel do Supabase.
+              </p>
+
+              <div class="steps-deploy">
+                <div class="deploy-step">
+                  <span class="deploy-num">1</span>
+                  <div>
+                    Clique para copiar o SQL abaixo e depois abra o
+                    <a href="https://supabase.com/dashboard/project/dqeyevscnuyqbwdhkqsv/sql/new" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline;font-weight:600">
+                      SQL Editor do Supabase ↗
+                    </a>
+                    <div style="margin-top:0.75rem">
+                      <button class="btn-save" onclick="copyWebhookSql()" id="btnCopySql">📋 Copiar SQL do webhook</button>
+                      <span id="copySqlOk" style="display:none;color:#22c55e;font-size:0.85rem;margin-left:0.75rem">✓ SQL copiado!</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="deploy-step">
+                  <span class="deploy-num">2</span>
+                  <span>Cole o SQL no editor, clique em <strong>"Run"</strong> e depois clique em <strong>"Verificar"</strong> acima — o status vai ficar verde.</span>
+                </div>
+              </div>
+
+              <details style="margin-top:1.25rem">
+                <summary style="cursor:pointer;font-size:0.85rem;color:var(--text-muted);user-select:none">Ver o SQL completo</summary>
+                <pre id="webhookSqlPreview" style="margin-top:0.75rem;padding:1rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:0.72rem;color:#a5b4c3;overflow-x:auto;white-space:pre-wrap;line-height:1.6"></pre>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <!-- Como configurar por plataforma -->
+        <div class="settings-panel">
+          <h3>Como configurar por plataforma</h3>
+          <p style="margin-bottom:1rem">Escolha sua plataforma e veja onde colar a URL:</p>
+
+          <div class="platform-tabs">
+            <button class="ptab active" onclick="showPlatform('hotmart',this)">Hotmart</button>
+            <button class="ptab" onclick="showPlatform('kiwify',this)">Kiwify</button>
+            <button class="ptab" onclick="showPlatform('braip',this)">Braip</button>
+            <button class="ptab" onclick="showPlatform('eduzz',this)">Eduzz</button>
+          </div>
+
+          <div id="plat-hotmart" class="plat-info">
+            <ol>
+              <li>Acesse <strong>Hotmart → Ferramentas → Webhooks</strong></li>
+              <li>Clique em <strong>"Criar Webhook"</strong></li>
+              <li>Cole a URL do webhook no campo <strong>URL de Notificação</strong></li>
+              <li>Selecione os eventos: <strong>PURCHASE_COMPLETE</strong> e <strong>PURCHASE_APPROVED</strong></li>
+              <li>Salve e ative</li>
+            </ol>
+          </div>
+          <div id="plat-kiwify" class="plat-info" style="display:none">
+            <ol>
+              <li>Acesse <strong>Kiwify → Configurações → Webhooks</strong></li>
+              <li>Clique em <strong>"Novo Webhook"</strong></li>
+              <li>Cole a URL do webhook</li>
+              <li>Selecione o evento <strong>"Venda Aprovada"</strong></li>
+              <li>Salve</li>
+            </ol>
+          </div>
+          <div id="plat-braip" class="plat-info" style="display:none">
+            <ol>
+              <li>Acesse <strong>Braip → Configurações → Postback</strong></li>
+              <li>Cole a URL no campo <strong>Postback URL</strong></li>
+              <li>Selecione o status <strong>"Venda Aprovada"</strong></li>
+              <li>Salve</li>
+            </ol>
+          </div>
+          <div id="plat-eduzz" class="plat-info" style="display:none">
+            <ol>
+              <li>Acesse <strong>Eduzz → Configurações → Webhooks</strong></li>
+              <li>Adicione a URL do webhook</li>
+              <li>Selecione o tipo <strong>"Venda Aprovada"</strong></li>
+              <li>Salve e ative</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Teste manual -->
+        <div class="settings-panel">
+          <h3>Testar venda manualmente</h3>
+          <p style="margin-bottom:1rem">Insere uma venda de teste direto no banco — aparece imediatamente em Vendas &amp; Receita.</p>
+          <div class="field-row">
+            <label>Valor da venda</label>
+            <input type="number" id="testSaleValue" placeholder="97.00" step="0.01" />
+          </div>
+          <div class="field-row">
+            <label>Tipo</label>
+            <select id="testSaleType" style="background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:0.7rem 0.8rem;color:var(--text);font-size:0.9rem;outline:none;width:100%">
+              <option value="main">Principal</option>
+              <option value="order_bump">Order Bump</option>
+              <option value="upsell">Upsell</option>
+              <option value="downsell">Downsell</option>
+            </select>
+          </div>
+          <button class="btn-save" onclick="sendTestSale()">Inserir venda de teste</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== MANAGE DATA ===== -->
+    <section class="page-section" id="section-manage">
+      <div class="panel" style="max-width:620px; margin-bottom:1.25rem">
+        <div class="section-title">Estatísticas dos dados</div>
+        <div id="dataStats">
+          <div class="loading-overlay"><div class="spinner"></div> Carregando...</div>
+        </div>
+      </div>
+
+      <div class="danger-zone">
+        <h3>Zona de perigo — Deletar métricas</h3>
+        <p>
+          Dados deletados não podem ser recuperados. Use com cuidado.<br>
+          O filtro de período selecionado no topo é aplicado na exclusão por período.
+        </p>
+        <div class="danger-actions">
+          <button class="btn-danger" id="btnDeletePeriod">
+            🗑️ Apagar métricas do período
+          </button>
+          <button class="btn-danger" id="btnDeleteAll" style="border-color:rgba(239,68,68,0.6)">
+            ⚠️ Apagar TODAS as métricas
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /main-content -->
+</div><!-- /admin-layout -->
+
+<!-- ===================== MODAL VENDA MANUAL ===================== -->
+<div class="modal-overlay" id="addSaleModal">
+  <div class="modal-box" style="max-width:520px">
+    <h3>Adicionar venda manualmente</h3>
+    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.25rem">Use para registrar vendas que não passaram pelo webhook.</p>
+    <div class="add-sale-grid">
+      <div>
+        <label class="modal-label">Produto</label>
+        <input class="modal-input" type="text" id="ms_product" placeholder="Ex: Molde Porta Canivete" style="margin-bottom:0" />
+      </div>
+      <div>
+        <label class="modal-label">Valor (R$)</label>
+        <input class="modal-input" type="number" id="ms_value" placeholder="Ex: 97.00" step="0.01" style="margin-bottom:0" />
+      </div>
+      <div>
+        <label class="modal-label">Tipo</label>
+        <select class="modal-select" id="ms_type">
+          <option value="main">Produto Principal</option>
+          <option value="order_bump">Order Bump</option>
+          <option value="upsell">Upsell</option>
+          <option value="downsell">Downsell</option>
+        </select>
+      </div>
+      <div>
+        <label class="modal-label">Plataforma</label>
+        <select class="modal-select" id="ms_platform">
+          <option value="hotmart">Hotmart</option>
+          <option value="kiwify">Kiwify</option>
+          <option value="braip">Braip</option>
+          <option value="eduzz">Eduzz</option>
+          <option value="manual">Manual</option>
+        </select>
+      </div>
+      <div>
+        <label class="modal-label">Nome do comprador</label>
+        <input class="modal-input" type="text" id="ms_buyer" placeholder="Opcional" style="margin-bottom:0" />
+      </div>
+      <div>
+        <label class="modal-label">E-mail do comprador</label>
+        <input class="modal-input" type="email" id="ms_email" placeholder="Opcional" style="margin-bottom:0" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeAddSaleModal()">Cancelar</button>
+      <button class="btn-save" onclick="saveManualSale()" style="padding:0.6rem 1.4rem">Salvar venda</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL ===================== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <h3 id="modalTitle">Confirmar exclusão</h3>
+    <p id="modalBody"></p>
+    <input class="modal-input" type="text" id="modalConfirmInput" placeholder="" style="display:none" />
+    <div class="modal-actions">
+      <button class="btn-cancel" id="modalCancel">Cancelar</button>
+      <button class="btn-confirm-delete" id="modalConfirm" disabled>Deletar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TOAST ===================== -->
+<div class="toast" id="toast"></div>
+
+<!-- ===================== SCRIPTS ===================== -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../config.js"></script>
+<script src="config_admin.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

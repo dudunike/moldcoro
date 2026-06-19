@@ -1,0 +1,29 @@
+# ──────────────────────────────────────────────
+#  Molds&Coros — .gitignore
+# ──────────────────────────────────────────────
+
+# Chaves secretas do painel admin — NUNCA commitar em repo público
+admin/config_admin.js
+
+# PDFs dos produtos (arquivos grandes, produto digital — não vai pro repo)
+*.pdf
+
+# Arquivo zip do template original
+*.zip
+
+# Scripts utilitários locais
+criar_admin.py
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (caso instale dependências no futuro)
+node_modules/
