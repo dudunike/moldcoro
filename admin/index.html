@@ -119,8 +119,17 @@
       var result = await sb.auth.signInWithPassword({ email: email, password: pass });
 
       if (result.error) {
-        err.textContent    = 'E-mail ou senha incorretos. Tente novamente.';
+        var msg = result.error.message || 'Erro desconhecido';
+        if (msg.toLowerCase().includes('email not confirmed')) {
+          msg = 'E-mail não confirmado. Acesse o Supabase Dashboard → Authentication → Users, clique no seu usuário e confirme o e-mail manualmente.';
+        } else if (msg.toLowerCase().includes('invalid login')) {
+          msg = 'E-mail ou senha incorretos. Verifique se criou o usuário no Supabase Dashboard.';
+        } else if (msg.toLowerCase().includes('user not found') || msg.toLowerCase().includes('no user')) {
+          msg = 'Usuário não encontrado. Crie o usuário em: Supabase Dashboard → Authentication → Users → Add user.';
+        }
+        err.textContent    = msg;
         err.style.display  = 'block';
+        err.style.whiteSpace = 'normal';
         btn.disabled       = false;
         btn.textContent    = 'Entrar no painel';
         document.getElementById('password').value = '';
