@@ -23,7 +23,7 @@ var SRC_FILTER = 'moldscoros';
    ============================================= */
 sb.auth.getSession().then(function (result) {
   if (!result.data || !result.data.session) {
-    window.location.href = 'index.html';
+    window.location.href = '/admin/index.html';
     return;
   }
   loadAllData();
@@ -31,7 +31,7 @@ sb.auth.getSession().then(function (result) {
 
 document.getElementById('btnLogout').addEventListener('click', async function () {
   await sb.auth.signOut();
-  window.location.href = 'index.html';
+  window.location.href = '/admin/index.html';
 });
 
 /* =============================================

@@ -101,7 +101,7 @@
     /* Já tem sessão ativa? Redireciona direto */
     sb.auth.getSession().then(function (result) {
       if (result.data && result.data.session) {
-        window.location.href = 'dashboard.html';
+        window.location.href = '/admin/dashboard.html';
       }
     });
 
@@ -135,7 +135,7 @@
         document.getElementById('password').value = '';
         document.getElementById('password').focus();
       } else {
-        window.location.href = 'dashboard.html';
+        window.location.href = '/admin/dashboard.html';
       }
     });
   </script>
