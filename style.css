@@ -1492,7 +1492,7 @@ img { max-width: 100%; }
 .section-hero .forever-pill-wrap { animation: heroUp   0.5s  ease 0.44s both; }
 .section-hero .delivery-badges   { animation: heroUp   0.5s  ease 0.54s both; }
 .section-hero .btn-lg            { animation: heroPop  0.5s  ease 0.64s both; }
-.section-hero .cta-microcopy     { animation: heroUp   0.4s  ease 0.74s both; }
+.section-hero .cta-microcopy     { animation: heroUp 0.4s ease 0.74s both; color: rgba(250,245,236,0.75); }
 .section-hero .hero-visual       { animation: heroSide 0.8s  ease 0.22s both; }
 .section-hero .hero-scroll-indicator { animation: heroUp 0.5s ease 1s both; }
 
