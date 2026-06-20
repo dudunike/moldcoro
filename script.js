@@ -143,19 +143,17 @@
 
 
   /* ================================================
-     5. STICKY CTA BAR — aparece quando lead passa pela seção de oferta
+     5. STICKY CTA BAR — aparece ao chegar na oferta e fica permanente
      ================================================ */
   var stickyCta = document.getElementById('sticky-cta-bar');
   if (stickyCta) {
     var offerSection = document.getElementById('comprar');
-    var stickyObserver = new IntersectionObserver(function (entries) {
+    var stickyObserver = new IntersectionObserver(function (entries, obs) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
           stickyCta.classList.add('visible');
           stickyCta.removeAttribute('aria-hidden');
-        } else {
-          stickyCta.classList.remove('visible');
-          stickyCta.setAttribute('aria-hidden', 'true');
+          obs.disconnect(); // lead viu a oferta — mantém CTA para sempre
         }
       });
     }, { threshold: 0.1 });
