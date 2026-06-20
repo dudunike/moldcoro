@@ -1547,3 +1547,51 @@ img { max-width: 100%; }
     transition: none !important;
   }
 }
+
+
+/* =============================================
+   BLOCO DE PREÇO — seção oferta
+   ============================================= */
+.offer-price-block {
+  background: var(--beige-light);
+  border: 2px solid var(--gold-burnt);
+  border-radius: var(--radius-card);
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.offer-price-era {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 0.3rem;
+}
+.offer-price-era s {
+  color: var(--text-muted);
+  text-decoration: line-through;
+  font-weight: 600;
+}
+
+.offer-price-now {
+  font-size: 1rem;
+  color: var(--brown-leather);
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 0.4rem;
+}
+.offer-price-now strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 900;
+  color: var(--brown-leather);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-top: 0.15rem;
+}
+
+.offer-price-parcelas {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+}
