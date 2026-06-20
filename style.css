@@ -1550,6 +1550,53 @@ img { max-width: 100%; }
 
 
 /* =============================================
+   FAIXA DE URGÊNCIA — topo da página
+   ============================================= */
+:root { --urgency-strip-height: 40px; }
+
+.urgency-strip {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 300;
+  height: var(--urgency-strip-height);
+  background: #c0392b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 1rem;
+}
+.urgency-strip span {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+.urgency-strip strong { font-weight: 800; color: #fff; }
+
+/* Header desce para baixo da faixa */
+.site-header { top: var(--urgency-strip-height) !important; }
+
+/* Header logo centralizada */
+.header-inner--centered {
+  justify-content: center;
+}
+
+/* Hero e anchors compensam a faixa + header */
+.section-hero {
+  padding-top: calc(var(--urgency-strip-height) + var(--header-height) + 3.5rem) !important;
+}
+#hero, #comprar, #faq {
+  scroll-margin-top: calc(var(--urgency-strip-height) + var(--header-height) + 0.5rem);
+}
+
+@media (max-width: 480px) {
+  :root { --urgency-strip-height: 36px; }
+  .urgency-strip span { font-size: 0.74rem; }
+}
+
+
+/* =============================================
    BLOCO DE PREÇO — seção oferta
    ============================================= */
 .offer-price-block {

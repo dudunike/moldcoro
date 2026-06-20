@@ -143,14 +143,14 @@
 
 
   /* ================================================
-     5. STICKY CTA BAR — aparece após o usuário sair do hero
+     5. STICKY CTA BAR — aparece quando lead passa pela seção de oferta
      ================================================ */
   var stickyCta = document.getElementById('sticky-cta-bar');
   if (stickyCta) {
-    var hero = document.getElementById('hero');
+    var offerSection = document.getElementById('comprar');
     var stickyObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (!entry.isIntersecting) {
+        if (entry.isIntersecting) {
           stickyCta.classList.add('visible');
           stickyCta.removeAttribute('aria-hidden');
         } else {
@@ -160,7 +160,7 @@
       });
     }, { threshold: 0.1 });
 
-    if (hero) stickyObserver.observe(hero);
+    if (offerSection) stickyObserver.observe(offerSection);
   }
 
 })();
