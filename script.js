@@ -141,4 +141,26 @@
   document.querySelectorAll('.will-reveal, .will-reveal-left, .will-reveal-right')
     .forEach(function (el) { io.observe(el); });
 
+
+  /* ================================================
+     5. STICKY CTA BAR — aparece após o usuário sair do hero
+     ================================================ */
+  var stickyCta = document.getElementById('sticky-cta-bar');
+  if (stickyCta) {
+    var hero = document.getElementById('hero');
+    var stickyObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) {
+          stickyCta.classList.add('visible');
+          stickyCta.removeAttribute('aria-hidden');
+        } else {
+          stickyCta.classList.remove('visible');
+          stickyCta.setAttribute('aria-hidden', 'true');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    if (hero) stickyObserver.observe(hero);
+  }
+
 })();

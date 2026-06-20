@@ -6,8 +6,8 @@
 
 'use strict';
 
-/* ---- Supabase com service_role (bypass RLS) ---- */
-var sb = supabase.createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+/* ---- Supabase com anon key + sessão autenticada ---- */
+var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
 /* ---- Estado global ---- */
 var currentSection = 'overview';
@@ -19,18 +19,18 @@ var dateTo         = null;
 var SRC_FILTER = 'moldscoros';
 
 /* =============================================
-   AUTENTICAÇÃO LOCAL
+   AUTENTICAÇÃO VIA SUPABASE AUTH
    ============================================= */
-(function checkAuth() {
-  if (sessionStorage.getItem('mc_admin_ok') !== '1') {
+sb.auth.getSession().then(function (result) {
+  if (!result.data || !result.data.session) {
     window.location.href = 'index.html';
     return;
   }
   loadAllData();
-})();
+});
 
-document.getElementById('btnLogout').addEventListener('click', function () {
-  sessionStorage.removeItem('mc_admin_ok');
+document.getElementById('btnLogout').addEventListener('click', async function () {
+  await sb.auth.signOut();
   window.location.href = 'index.html';
 });
 

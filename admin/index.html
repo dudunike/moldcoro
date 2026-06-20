@@ -80,7 +80,7 @@
     <form id="loginForm">
       <div class="field">
         <label>E-mail</label>
-        <input type="email" id="email" value="eduardoeustaquio369@gmail.com" readonly />
+        <input type="email" id="email" value="eduardoeustaquio369@gmail.com" />
       </div>
       <div class="field">
         <label>Senha</label>
@@ -93,39 +93,40 @@
     <div class="footer-note">Molds&amp;Coros · Acesso restrito</div>
   </div>
 
-  <script src="config_admin.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../config.js"></script>
   <script>
-    /* Já tem sessão ativa? */
-    if (sessionStorage.getItem('mc_admin_ok') === '1') {
-      window.location.href = 'dashboard.html';
-    }
+    var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    /* Já tem sessão ativa? Redireciona direto */
+    sb.auth.getSession().then(function (result) {
+      if (result.data && result.data.session) {
+        window.location.href = 'dashboard.html';
+      }
+    });
 
     document.getElementById('loginForm').addEventListener('submit', async function (e) {
       e.preventDefault();
-      var btn  = document.getElementById('loginBtn');
-      var err  = document.getElementById('errBox');
-      var pass = document.getElementById('password').value;
+      var btn   = document.getElementById('loginBtn');
+      var err   = document.getElementById('errBox');
+      var email = document.getElementById('email').value;
+      var pass  = document.getElementById('password').value;
 
       err.style.display = 'none';
       btn.disabled    = true;
       btn.textContent = 'Verificando...';
 
-      /* Hash SHA-256 da senha digitada */
-      var encoded = new TextEncoder().encode(pass);
-      var buf     = await crypto.subtle.digest('SHA-256', encoded);
-      var hash    = Array.from(new Uint8Array(buf))
-                      .map(function(b) { return b.toString(16).padStart(2,'0'); })
-                      .join('');
+      var result = await sb.auth.signInWithPassword({ email: email, password: pass });
 
-      if (hash === ADMIN_PASSWORD_HASH) {
-        sessionStorage.setItem('mc_admin_ok', '1');
-        window.location.href = 'dashboard.html';
-      } else {
-        err.style.display = 'block';
-        btn.disabled    = false;
-        btn.textContent = 'Entrar no painel';
+      if (result.error) {
+        err.textContent    = 'E-mail ou senha incorretos. Tente novamente.';
+        err.style.display  = 'block';
+        btn.disabled       = false;
+        btn.textContent    = 'Entrar no painel';
         document.getElementById('password').value = '';
         document.getElementById('password').focus();
+      } else {
+        window.location.href = 'dashboard.html';
       }
     });
   </script>
