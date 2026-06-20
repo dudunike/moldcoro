@@ -128,20 +128,37 @@ function query(types, df) {
 }
 
 /* =============================================
+   TESTE DE ACESSO AO BANCO
+   ============================================= */
+function checkDbAccess(callback) {
+  sb.from('chaves_events').select('id', { count: 'exact', head: true }).then(function (res) {
+    var banner = document.getElementById('setupBanner');
+    if (res.error) {
+      if (banner) banner.style.display = 'block';
+    } else {
+      if (banner) banner.style.display = 'none';
+    }
+    if (callback) callback();
+  });
+}
+
+/* =============================================
    CARREGAR TODOS OS DADOS
    ============================================= */
 function loadAllData() {
-  loadOverviewMetrics();
-  loadSalesOverview();
-  loadFunnelData();
-  loadClicksBySection();
-  loadReferrers();
-  loadScrollDepth();
-  loadDevices();
-  if (currentSection === 'heatmap') renderHeatmap();
-  if (currentSection === 'manage')  loadDataStats();
-  if (currentSection === 'sales')   loadSalesData();
-  if (currentSection === 'webhook') loadWebhookSettings();
+  checkDbAccess(function () {
+    loadOverviewMetrics();
+    loadSalesOverview();
+    loadFunnelData();
+    loadClicksBySection();
+    loadReferrers();
+    loadScrollDepth();
+    loadDevices();
+    if (currentSection === 'heatmap') renderHeatmap();
+    if (currentSection === 'manage')  loadDataStats();
+    if (currentSection === 'sales')   loadSalesData();
+    if (currentSection === 'webhook') loadWebhookSettings();
+  });
 }
 
 /* =============================================

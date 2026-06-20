@@ -87,6 +87,27 @@
       </div>
     </div>
 
+    <!-- ===== PAINEL DE SETUP (aparece se banco não estiver configurado) ===== -->
+    <div id="setupBanner" style="display:none;background:#1a1d27;border:1.5px solid #C8832A;border-radius:12px;padding:1.5rem 2rem;margin:1.5rem;color:#e2e8f0">
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+        <span style="font-size:1.5rem">⚠️</span>
+        <strong style="font-size:1.05rem;color:#C8832A">Configuração necessária: permissões do banco de dados</strong>
+      </div>
+      <p style="color:#94a3b8;margin-bottom:1rem;font-size:0.9rem">Execute este SQL no <a href="https://supabase.com/dashboard/project/dqeyevscnuyqbwdhkqsv/sql/new" target="_blank" style="color:#C8832A;text-decoration:underline">Supabase SQL Editor</a> para liberar o acesso do painel:</p>
+      <pre id="setupSql" style="background:#0d0f18;border:1px solid #2d3148;border-radius:8px;padding:1rem;font-size:0.78rem;color:#a3e635;overflow-x:auto;white-space:pre-wrap;line-height:1.6">ALTER TABLE public.chaves_events ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "anon_insert_chaves"  ON public.chaves_events;
+CREATE POLICY "anon_insert_chaves"  ON public.chaves_events FOR INSERT TO anon      WITH CHECK (true);
+
+DROP POLICY IF EXISTS "auth_select_chaves"  ON public.chaves_events;
+CREATE POLICY "auth_select_chaves"  ON public.chaves_events FOR SELECT TO authenticated USING (true);
+
+DROP POLICY IF EXISTS "auth_delete_chaves"  ON public.chaves_events;
+CREATE POLICY "auth_delete_chaves"  ON public.chaves_events FOR DELETE TO authenticated USING (true);</pre>
+      <button onclick="navigator.clipboard.writeText(document.getElementById('setupSql').textContent).then(function(){this.textContent='✅ Copiado!';var b=this;setTimeout(function(){b.textContent='📋 Copiar SQL'},2000)}.bind(this))" style="margin-top:0.75rem;background:#C8832A;color:#fff;border:none;border-radius:6px;padding:0.6rem 1.25rem;font-size:0.85rem;font-weight:600;cursor:pointer">📋 Copiar SQL</button>
+      <p style="margin-top:0.75rem;font-size:0.78rem;color:#64748b">Após executar o SQL, clique em ↺ Atualizar no topo.</p>
+    </div>
+
     <!-- ===== OVERVIEW ===== -->
     <section class="page-section active" id="section-overview">
 

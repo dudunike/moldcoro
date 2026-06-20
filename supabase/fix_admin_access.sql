@@ -29,13 +29,14 @@ CREATE POLICY "auth_delete_chaves"
 -- GRANT EXECUTE ON FUNCTION public.receive_webhook(jsonb) TO anon; -- já feito
 
 -- ============================================================
--- 6. Criar usuário admin no Supabase Auth
---    (só precisa rodar uma vez — cria sua conta de login)
+-- 6. Confirmar e-mail do usuário admin (roda se não consegue logar)
 -- ============================================================
-SELECT auth.uid(); -- teste: verifica se auth schema está acessível
+UPDATE auth.users
+SET email_confirmed_at = NOW(),
+    confirmed_at       = NOW(),
+    updated_at         = NOW()
+WHERE email = 'eduardoeustaquio369@gmail.com';
 
--- Se der erro no SELECT acima, crie o usuário manualmente:
--- Dashboard Supabase → Authentication → Users → Add user → Create new user
--- Email: eduardoeustaquio369@gmail.com
--- Password: (sua senha)
--- ✅ Auto Confirm User: ATIVADO
+-- Verificar se funcionou (deve retornar 1 linha com email_confirmed_at preenchido):
+SELECT email, email_confirmed_at, confirmed_at FROM auth.users
+WHERE email = 'eduardoeustaquio369@gmail.com';
