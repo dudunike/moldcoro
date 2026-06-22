@@ -341,6 +341,163 @@ a { color: inherit; text-decoration: none; }
 .funnel-row.highlight .funnel-pct { color: var(--green); }
 
 /* =============================================
+   FUNIL VISUAL — NOVO DESIGN V-FUNNEL
+   ============================================= */
+.vfunnel {
+  padding: 0.25rem 0;
+}
+
+.vfunnel-base {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+/* Degrau do funil */
+.vfunnel-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.vfunnel-bar-outer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.vfunnel-bar-inner {
+  /* width definida via JS — começa largo e afunila */
+  min-width: 12%;
+  max-width: 100%;
+  border-radius: 6px;
+  padding: 0.7rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: width 0.9s cubic-bezier(.4,0,.2,1);
+  position: relative;
+  overflow: hidden;
+}
+
+.vfunnel-step--first .vfunnel-bar-inner {
+  background: var(--gold) !important;
+  padding: 0.85rem 1rem;
+}
+
+.vfunnel-step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px; height: 22px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.vfunnel-step-label {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vfunnel-step-pct {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #fff;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.vfunnel-step-count {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.65);
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 50px;
+  text-align: right;
+}
+
+/* Drop-off — seta entre degraus */
+.vfunnel-drop {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0 0.2rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  user-select: none;
+}
+
+.vfunnel-drop-arrow {
+  font-size: 0.72rem;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.vfunnel-drop-text { letter-spacing: 0.01em; }
+
+.vfunnel-drop--low  { color: #4ade80; }   /* ≤ 18% saída: ok */
+.vfunnel-drop--mid  { color: #facc15; }   /* 18-35%: atenção */
+.vfunnel-drop--high { color: #f87171; }   /* > 35%: ruim */
+
+/* CTA — degrau final destacado */
+.vfunnel-cta {
+  display: flex;
+  justify-content: center;
+  padding-top: 0.5rem;
+}
+
+.vfunnel-cta-inner {
+  min-width: 12%;
+  background: linear-gradient(135deg, #15803d, #22c55e);
+  border: 2px solid #4ade80;
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  box-shadow: 0 0 18px rgba(34,197,94,0.25);
+  transition: width 0.9s cubic-bezier(.4,0,.2,1);
+}
+
+.vfunnel-cta-icon  { font-size: 1.1rem; flex-shrink: 0; }
+.vfunnel-cta-label { font-size: 0.86rem; font-weight: 700; color: #fff; flex: 1; }
+.vfunnel-cta-pct   { font-size: 1.15rem; font-weight: 900; color: #fff; flex-shrink: 0; }
+.vfunnel-cta-count { font-size: 0.75rem; color: rgba(255,255,255,0.7); white-space: nowrap; flex-shrink: 0; }
+
+/* Link "ver funil completo" na versão mini */
+.vfunnel-link {
+  font-size: 0.8rem;
+  color: var(--gold);
+  cursor: pointer;
+  margin-top: 0.85rem;
+  text-align: right;
+  transition: color 0.12s;
+}
+.vfunnel-link:hover { color: var(--gold-light); }
+
+/* Mini — versão compacta para o overview */
+.vfunnel--mini .vfunnel-bar-inner { padding: 0.55rem 0.75rem; }
+.vfunnel--mini .vfunnel-step-pct  { font-size: 0.88rem; }
+.vfunnel--mini .vfunnel-step-label{ font-size: 0.76rem; }
+.vfunnel--mini .vfunnel-step-num  { min-width: 18px; height: 18px; font-size: 0.62rem; }
+.vfunnel--mini .vfunnel-cta-inner { padding: 0.6rem 0.8rem; }
+.vfunnel--mini .vfunnel-cta-pct   { font-size: 0.95rem; }
+.vfunnel--mini .vfunnel-cta-label { font-size: 0.78rem; }
+.vfunnel--mini .vfunnel-drop      { padding: 0.2rem 0; font-size: 0.72rem; }
+
+
+/* =============================================
    HEATMAP
    ============================================= */
 .heatmap-container {

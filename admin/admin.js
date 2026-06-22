@@ -199,18 +199,11 @@ function loadOverviewMetrics() {
    FUNIL
    ============================================= */
 var FUNNEL_STEPS = [
-  { key: 'hero',              label: 'Hero (entrada)' },
-  { key: 'section-audience',  label: 'Para quem é' },
-  { key: 'section-problem',   label: 'O problema' },
-  { key: 'section-how',       label: 'Como funciona' },
-  { key: 'section-product',   label: 'O produto' },
-  { key: 'section-contents',  label: 'O que vem no kit' },
-  { key: 'section-bonuses',   label: 'Bônus' },
-  { key: 'section-lucrative', label: 'Por que é lucrativo' },
-  { key: 'section-forwhom',   label: 'Para quem' },
-  { key: 'comprar',           label: 'Oferta (COMPRAR)' },
-  { key: 'section-faq',       label: 'FAQ' },
-  { key: 'section-cta-final', label: 'CTA Final' },
+  { key: 'hero',             label: 'Hero' },
+  { key: 'section-proof',    label: 'Prova Visual' },
+  { key: 'section-contents', label: 'O que vem dentro' },
+  { key: 'comprar',          label: 'Oferta' },
+  { key: 'section-faq',      label: 'FAQ' },
 ];
 
 function loadFunnelData() {
@@ -220,8 +213,8 @@ function loadFunnelData() {
     query(['scroll', 'cta_click', 'exit'], df),
     query(['page_view'], df)
   ]).then(function (results) {
-    var events   = results[0].data || [];
-    var pvEvents = results[1].data || [];
+    var events    = results[0].data || [];
+    var pvEvents  = results[1].data || [];
     var totalSess = new Set(pvEvents.map(function (e) { return e.session_id; })).size;
 
     if (totalSess === 0) {
@@ -240,13 +233,21 @@ function loadFunnelData() {
       }
     });
 
-    var ctaSess = new Set(events.filter(function (e) { return e.type === 'cta_click'; }).map(function (e) { return e.session_id; }));
+    var ctaSess = new Set(
+      events.filter(function (e) { return e.type === 'cta_click'; })
+            .map(function (e) { return e.session_id; })
+    );
 
     var rows = FUNNEL_STEPS.map(function (step) {
       var count = (sectionSess[step.key] || new Set()).size;
       return { label: step.label, count: count, pct: Math.round((count / totalSess) * 100) };
     });
-    rows.push({ label: '✓ Clicou em Comprar', count: ctaSess.size, pct: Math.round((ctaSess.size / totalSess) * 100), isCta: true });
+    rows.push({
+      label: 'Clicou em Comprar',
+      count: ctaSess.size,
+      pct:   Math.round((ctaSess.size / totalSess) * 100),
+      isCta: true
+    });
 
     renderFunnel('overviewFunnel', rows, totalSess, true);
     renderFunnel('fullFunnel',     rows, totalSess, false);
@@ -254,18 +255,68 @@ function loadFunnelData() {
 }
 
 function renderFunnel(elId, rows, total, mini) {
-  var limit = mini ? 6 : rows.length;
-  var html  = '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem">Base: ' + total + ' visitantes</div>';
-  rows.slice(0, limit).forEach(function (row) {
-    html += '<div class="funnel-row' + (row.isCta ? ' highlight' : '') + '">';
-    html += '<span class="funnel-label">' + row.label + '</span>';
-    html += '<div class="funnel-bar-wrap"><div class="funnel-bar" style="width:' + row.pct + '%"></div></div>';
-    html += '<span class="funnel-pct">' + row.pct + '%</span>';
-    html += '<span class="funnel-count">' + row.count + '</span></div>';
-  });
-  if (mini && rows.length > limit) {
-    html += '<div style="font-size:0.8rem;margin-top:0.75rem;cursor:pointer;color:var(--gold)" onclick="switchSection(\'funnel\')">Ver funil completo →</div>';
+  if (!rows.length) {
+    setHTML(elId, '<div class="empty-state"><div class="empty-icon">📊</div><p>Sem dados no período.</p></div>');
+    return;
   }
+
+  var html = '<div class="vfunnel' + (mini ? ' vfunnel--mini' : '') + '">';
+  html += '<div class="vfunnel-base">' + total + ' visitantes únicos no período</div>';
+
+  var prevCount = total;
+
+  rows.forEach(function (row, i) {
+    var barW = Math.max(row.pct, 12); /* largura mínima para visibilidade */
+
+    if (row.isCta) {
+      /* Degrau de CTA — destaque verde */
+      html += '<div class="vfunnel-cta">';
+      html += '<div class="vfunnel-cta-inner" style="width:' + barW + '%">';
+      html += '<span class="vfunnel-cta-icon">✓</span>';
+      html += '<span class="vfunnel-cta-label">' + row.label + '</span>';
+      html += '<span class="vfunnel-cta-pct">' + row.pct + '%</span>';
+      if (!mini) html += '<span class="vfunnel-cta-count">' + row.count + ' cliques</span>';
+      html += '</div></div>';
+    } else {
+      /* Cor do degrau: mais saturado no topo, mais frio embaixo */
+      var intensity = Math.max(0.45, row.pct / 100);
+      var r = Math.round(200 * intensity);
+      var g = Math.round(131 * intensity);
+      var b = Math.round(42  * intensity);
+      var bg = 'rgba(' + r + ',' + g + ',' + b + ',0.85)';
+
+      /* Drop-off em relação ao degrau anterior */
+      var dropCount = prevCount - row.count;
+      var dropPct   = prevCount > 0 ? Math.round((dropCount / prevCount) * 100) : 0;
+      var dropClass = dropPct >= 35 ? 'high' : (dropPct >= 18 ? 'mid' : 'low');
+
+      /* Seta de saída entre degraus (exceto antes do primeiro) */
+      if (i > 0 && dropCount > 0) {
+        html += '<div class="vfunnel-drop vfunnel-drop--' + dropClass + '">';
+        html += '<span class="vfunnel-drop-arrow">▼</span>';
+        html += '<span class="vfunnel-drop-text">−' + dropCount + ' saíram (' + dropPct + '%)</span>';
+        html += '</div>';
+      }
+
+      html += '<div class="vfunnel-step' + (i === 0 ? ' vfunnel-step--first' : '') + '">';
+      html += '<div class="vfunnel-bar-outer">';
+      html += '<div class="vfunnel-bar-inner" style="width:' + barW + '%;background:' + bg + '">';
+      html += '<span class="vfunnel-step-num">' + (i + 1) + '</span>';
+      html += '<span class="vfunnel-step-label">' + row.label + '</span>';
+      html += '<span class="vfunnel-step-pct">' + row.pct + '%</span>';
+      if (!mini) html += '<span class="vfunnel-step-count">' + row.count + '</span>';
+      html += '</div></div>';
+      html += '</div>';
+
+      prevCount = row.count;
+    }
+  });
+
+  if (mini) {
+    html += '<div class="vfunnel-link" onclick="switchSection(\'funnel\')">Ver funil completo →</div>';
+  }
+
+  html += '</div>';
   setHTML(elId, html);
 }
 

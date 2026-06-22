@@ -51,10 +51,7 @@
 
   /* ---- 2. Seção visível ---- */
   var sectionIds = [
-    'hero', 'section-audience', 'section-problem', 'section-how',
-    'section-product', 'section-contents', 'section-bonuses',
-    'section-lucrative', 'section-forwhom', 'comprar',
-    'section-faq', 'section-cta-final'
+    'hero', 'section-proof', 'section-contents', 'comprar', 'section-faq'
   ];
 
   if ('IntersectionObserver' in window) {
