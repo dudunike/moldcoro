@@ -812,3 +812,24 @@ p { color: #3F3F3F; line-height: 1.75; }
 .trust-icon { width: 64px; height: 64px; object-fit: contain; }
 .plan__pay-img { width: 100%; max-width: 200px; margin: 1rem auto; display: block; object-fit: contain; }
 .testimonial-title { font-size: 1rem; color: #3F3F3F; font-style: italic; font-weight: 500; }
+
+
+
+
+@keyframes pulse-green {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(57, 181, 116, 0.7); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(57, 181, 116, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(57, 181, 116, 0); }
+}
+.btn--green {
+  background: #39B574 !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  animation: pulse-green 2s infinite;
+  box-shadow: 0 4px 15px rgba(57, 181, 116, 0.4);
+}
+.btn--green:hover {
+  filter: brightness(1.1);
+}
+.models-carousel { display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; padding: 1rem 0; }
+.models-carousel img { width: 220px; height: 200px; object-fit: cover; flex-shrink: 0; scroll-snap-align: start; border-radius: 10px; }
