@@ -683,6 +683,93 @@ p { color: #3F3F3F; line-height: 1.75; }
 .acc-panel p { padding-bottom: 1.25rem; font-size: 0.95rem; color: #555; line-height: 1.75; }
 
 /* ═══════════════════════════════════════════════════
+   SEC 10 — DEPOIMENTOS
+   ═══════════════════════════════════════════════════ */
+.s-testimonials {
+  background: var(--c-cream2);
+  padding: var(--pad-y) 0;
+}
+.s-testimonials .sec-h2 { margin-bottom: 0.5rem; }
+.s-testimonials .sec-lead { margin-bottom: 2.5rem; }
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.testimonial-card {
+  background: #fff;
+  border-radius: var(--r);
+  padding: 1.75rem 1.5rem 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,.07);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.testimonial-stars {
+  color: #F5A623;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+}
+
+.testimonial-quote {
+  font-size: 0.92rem;
+  color: #3F3F3F;
+  line-height: 1.75;
+  font-style: italic;
+  flex: 1;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  border-top: 1px solid #F0EBE4;
+  padding-top: 1rem;
+}
+
+.testimonial-avatar {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  background: var(--c-dark);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.testimonial-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #1A1A1A;
+  margin: 0;
+}
+
+.testimonial-role {
+  font-size: 0.78rem;
+  color: #888;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .testimonials-grid { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
+}
+
+@media (max-width: 560px) {
+  .testimonials-grid { max-width: 100%; }
+}
+
+/* ═══════════════════════════════════════════════════
    FOOTER  (#000000)
    ═══════════════════════════════════════════════════ */
 .site-footer { background: var(--c-footer); padding: 3.5rem 0; }
