@@ -244,65 +244,83 @@ p { color: #3F3F3F; line-height: 1.75; }
 
 /* ═══════════════════════════════════════════════════
    SEC 3 — FEATURES  (#E6DCCB)
-   2×2 imgbox em branco
+   2 linhas de 2 image-box em branco
    ═══════════════════════════════════════════════════ */
 .s-features {
   background: var(--c-beige2);
   padding: var(--pad-y) 0;
 }
-.features-grid {
+.feat-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  margin: 2rem 0 1.5rem;
+  margin-bottom: 1rem;
 }
 .imgbox {
   border-radius: var(--r);
-  padding: 1.75rem 1.25rem;
+  overflow: hidden;
   text-align: center;
 }
 .imgbox--white {
   background: #fff;
   box-shadow: 0 2px 14px rgba(0,0,0,.07);
 }
-.imgbox h3 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700; color: #1A1A1A; margin-bottom: 0.4rem; }
-.imgbox p  { font-size: 0.88rem; color: #555; }
-.features-summary { color: #3F3F3F; font-size: 1rem; margin-bottom: 1.5rem; font-style: italic; }
+.imgbox__img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+.imgbox__img--sm {
+  height: 140px;
+}
+.imgbox h3 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700; color: #1A1A1A; margin-bottom: 0.4rem; padding: 1rem 1rem 0; }
+.imgbox p  { font-size: 0.88rem; color: #555; padding: 0 1rem 1.25rem; }
+.features-summary { color: #3F3F3F; font-size: 1rem; margin-bottom: 1.5rem; font-style: italic; margin-top: 0.5rem; }
 
 /* ═══════════════════════════════════════════════════
-   SEC 4 — BENEFÍCIOS  (#FDF6F7 outer / #F6F0DA esq)
-   2 colunas: esq cream com texto | dir pink com scroll imgs
+   SEC 4 — BENEFÍCIOS TEXTO  (#FDF6F7 outer / #F6F0DA inner)
+   Container único com texto — separado do carrossel
    ═══════════════════════════════════════════════════ */
-.s-benefits {
+.s-benefits-text {
   background: var(--c-cream2);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: 520px;
+  padding: var(--pad-y) 0;
 }
-.s-benefits__left {
+.s-benefits-text__inner {
   background: var(--c-cream1);
-  display: flex;
-  align-items: center;
-}
-.s-benefits__left-pad {
-  padding: var(--pad-y) 2.5rem;
-  max-width: 560px;
+  max-width: 680px;
   margin: 0 auto;
+  padding: var(--pad-y) 2.5rem;
+  border-radius: var(--r);
 }
-.s-benefits__left-pad .sec-h2 { color: #030303; margin-bottom: 1.25rem; }
-.s-benefits__right {
-  overflow: hidden;
-  display: flex;
-  align-items: center;
+.s-benefits-text__inner .sec-h2 { color: #030303; margin-bottom: 1.25rem; }
+
+/* ═══════════════════════════════════════════════════
+   SEC 5 — BENEFÍCIOS CARROSSEL  (#FDF6F7)
+   Scroll horizontal de imagens de produto
+   ═══════════════════════════════════════════════════ */
+.s-benefits-carousel {
+  background: var(--c-cream2);
+  padding: 0 0 var(--pad-y);
 }
-.benefits-scroll {
+.benefits-carousel-scroll {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  overflow-y: auto;
-  max-height: 600px;
-  padding: 1.5rem;
-  width: 100%;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 0 24px 0.5rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.benefits-carousel-scroll::-webkit-scrollbar { height: 4px; }
+.benefits-carousel-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,.1); border-radius: 2px; }
+.benefits-carousel-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,.25); border-radius: 2px; }
+.benefits-carousel-scroll img {
+  height: 280px;
+  min-width: 200px;
+  object-fit: cover;
+  border-radius: var(--r);
+  flex-shrink: 0;
+  scroll-snap-align: start;
 }
 
 /* ═══════════════════════════════════════════════════
@@ -353,12 +371,12 @@ p { color: #3F3F3F; line-height: 1.75; }
 .imgbox--green {
   background: var(--c-green1);
   box-shadow: 0 2px 10px rgba(0,0,0,.05);
-  padding: 1.5rem 1.25rem;
   text-align: center;
   border-radius: var(--r);
+  overflow: hidden;
 }
-.imgbox--green h3 { color: #1A1A1A; font-size: 0.97rem; }
-.imgbox--green p  { font-size: 0.85rem; color: #555; }
+.imgbox--green h3 { color: #1A1A1A; font-size: 0.97rem; padding: 0.85rem 1rem 0.25rem; }
+.imgbox--green p  { font-size: 0.85rem; color: #555; padding: 0 1rem 1.1rem; }
 
 /* ═══════════════════════════════════════════════════
    SEC 7 — O QUE VOCÊ RECEBE + BÔNUS  (#FFFFFF)
@@ -601,12 +619,18 @@ p { color: #3F3F3F; line-height: 1.75; }
   background: #fff;
   border: 1px solid #EEE7E0;
   border-radius: var(--r);
-  padding: 1.75rem 1.25rem;
   text-align: center;
   box-shadow: 0 2px 12px rgba(0,0,0,.05);
+  overflow: hidden;
 }
-.how-step__name { font-weight: 700; font-size: 0.97rem; color: var(--c-dark); margin-bottom: 0.35rem; }
-.how-step__desc { font-size: 0.85rem; color: #555; }
+.how-step__img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+.how-step__name { font-weight: 700; font-size: 0.97rem; color: var(--c-dark); margin-bottom: 0.35rem; padding: 1rem 1rem 0; }
+.how-step__desc { font-size: 0.85rem; color: #555; padding: 0 1rem 1.25rem; }
 
 /* ═══════════════════════════════════════════════════
    SEC 12 — FAQ  (#FFFFFF)
@@ -746,64 +770,37 @@ p { color: #3F3F3F; line-height: 1.75; }
   flex-shrink: 0;
 }
 
-/* ─── ícones de feature (emoji circles) ─── */
-.feat-icon {
-  font-size: 2rem;
-  line-height: 1;
-  margin: 0 auto 0.75rem;
-  display: block;
-}
-.feat-icon--sm { font-size: 1.4rem; margin-bottom: 0.5rem; }
-
-/* ─── how-num (passo a passo) ─── */
-.how-num {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--c-coral);
-  color: #fff;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 900;
-  font-size: 1.3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 0.75rem;
-}
 
 /* ═══════════════════════════════════════════════════
    RESPONSIVO
    ═══════════════════════════════════════════════════ */
 @media (max-width: 1024px) {
-  .features-grid   { grid-template-columns: repeat(2, 1fr); }
   .bonus-cards-grid { grid-template-columns: repeat(2, 1fr); }
-  .how-steps       { grid-template-columns: repeat(2, 1fr); }
+  .how-steps        { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 900px) {
-  .s-benefits { grid-template-columns: 1fr; }
-  .s-benefits__left-pad { padding: 3rem 24px; max-width: 100%; }
-  .benefits-scroll { flex-direction: row; max-height: none; overflow-x: auto; padding: 1.5rem 24px; }
-  .pricing-cols { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
+  .s-benefits-text__inner { padding: 3rem 24px; }
+  .pricing-cols  { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
   .guarantee-row { flex-direction: column; text-align: center; gap: 1.75rem; }
-  .forwhom-grid { grid-template-columns: repeat(2, 1fr); }
+  .forwhom-grid  { grid-template-columns: repeat(2, 1fr); }
+  .feat-row      { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 768px) {
   :root { --pad-y: 48px; --urg-h: 36px; }
-  .features-grid { grid-template-columns: repeat(2, 1fr); }
-  .forwhom-grid { grid-template-columns: 1fr; }
+  .forwhom-grid  { grid-template-columns: 1fr; }
   .bonus-cards-grid { grid-template-columns: 1fr; max-width: 380px; margin: 0 auto; }
   .gallery-feat-img { max-height: 220px; }
-  .hero-img { max-height: 280px; }
-  .receive-img { max-height: 260px; }
+  .hero-img      { max-height: 280px; }
+  .receive-img   { max-height: 260px; }
   .guarantee-img { width: 120px; height: 120px; min-width: 120px; }
 }
 
 @media (max-width: 560px) {
   :root { --pad-y: 40px; }
-  .how-steps { grid-template-columns: 1fr; max-width: 340px; margin: 2rem auto 0; }
-  .features-grid { grid-template-columns: 1fr; }
+  .feat-row      { grid-template-columns: 1fr; }
+  .how-steps     { grid-template-columns: 1fr; max-width: 340px; margin: 2rem auto 0; }
   .forwhom-grid  { grid-template-columns: 1fr; }
-  .btn--lg { width: 100%; justify-content: center; }
+  .btn--lg       { width: 100%; justify-content: center; }
 }
