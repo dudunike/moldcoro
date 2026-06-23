@@ -27,6 +27,16 @@ sb.auth.getSession().then(function (result) {
     return;
   }
   loadAllData();
+  
+  var rtTimer;
+  sb.channel('realtime_events')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chaves_events' }, function(payload) {
+      if (payload.new && payload.new.meta && payload.new.meta.source === SRC_FILTER) {
+        clearTimeout(rtTimer);
+        rtTimer = setTimeout(loadAllData, 1500);
+      }
+    })
+    .subscribe();
 });
 
 document.getElementById('btnLogout').addEventListener('click', async function () {
@@ -60,6 +70,7 @@ function switchSection(sec) {
   if (sec === 'manage')  loadDataStats();
   if (sec === 'sales')   loadSalesData();
   if (sec === 'webhook') loadWebhookSettings();
+  if (sec === 'settings') loadSettings();
 }
 
 /* =============================================
@@ -93,7 +104,9 @@ document.getElementById('btnRefresh').addEventListener('click', loadAllData);
 
 function getDateFilter() {
   if (dateFrom && dateTo) {
-    return { gte: dateFrom + 'T00:00:00Z', lte: dateTo + 'T23:59:59Z' };
+    var fromD = new Date(dateFrom + 'T00:00:00');
+    var toD   = new Date(dateTo + 'T23:59:59');
+    return { gte: fromD.toISOString(), lte: toD.toISOString() };
   }
   var now   = new Date();
   var start = new Date(now);
@@ -112,7 +125,9 @@ function query(types, df) {
   var q = sb.from('chaves_events')
     .select('id, session_id, type, meta, created_at')
     .gte('created_at', df.gte)
-    .lte('created_at', df.lte);
+    .lte('created_at', df.lte)
+    .order('created_at', { ascending: false })
+    .limit(10000);
 
   if (types && types.length === 1) q = q.eq('type', types[0]);
   if (types && types.length > 1)   q = q.in('type', types);
@@ -158,6 +173,7 @@ function loadAllData() {
     if (currentSection === 'manage')  loadDataStats();
     if (currentSection === 'sales')   loadSalesData();
     if (currentSection === 'webhook') loadWebhookSettings();
+    if (currentSection === 'settings') loadSettings();
   });
 }
 
@@ -891,3 +907,54 @@ function formatSeconds(s) {
   var m = Math.floor(s / 60); var sec = s % 60;
   return m === 0 ? sec + 's' : m + 'min' + (sec > 0 ? ' ' + sec + 's' : '');
 }
+
+/* =============================================
+   SETTINGS (PIXEL & ANALYTICS)
+   ============================================= */
+window.saveSetting = function(key, inputId, okId) {
+  try {
+    var val = document.getElementById(inputId).value.trim();
+    var ok = document.getElementById(okId);
+    var btn = typeof event !== 'undefined' ? (event.target || event.srcElement) : null;
+    if (!btn && window.event) btn = window.event.target || window.event.srcElement;
+    if (btn && btn.tagName === 'BUTTON') { btn.disabled = true; btn.textContent = 'Salvando...'; }
+
+    sb.from('analytics_settings').upsert({ key: key, value: val, updated_at: new Date().toISOString() })
+      .then(function (res) {
+        if (btn && btn.tagName === 'BUTTON') { btn.disabled = false; btn.textContent = 'Salvar'; }
+        if (res.error) {
+          if (res.error.message.includes('relation') && res.error.message.includes('does not exist')) {
+            showToast('Erro: Tabela de configurações não existe! Execute o SQL do painel.', 'error');
+          } else {
+            showToast('Erro ao salvar: ' + res.error.message, 'error');
+          }
+        } else {
+          if(ok) {
+            ok.style.display = 'inline';
+            setTimeout(function () { ok.style.display = 'none'; }, 2000);
+          }
+          showToast('Configuração salva com sucesso!', 'success');
+        }
+      });
+  } catch(e) {
+    console.error(e);
+    showToast('Erro interno: ' + e.message, 'error');
+  }
+};
+
+window.loadSettings = function() {
+  sb.from('analytics_settings').select('*').then(function(res) {
+    if (res.error) return;
+    var data = res.data || [];
+    data.forEach(function(row) {
+      if (row.key === 'facebook_pixel_id') {
+        var el = document.getElementById('facebookPixelId');
+        if(el) el.value = row.value || '';
+      }
+      if (row.key === 'google_analytics_id') {
+        var el = document.getElementById('googleAnalyticsId');
+        if(el) el.value = row.value || '';
+      }
+    });
+  });
+};
