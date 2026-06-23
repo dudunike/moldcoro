@@ -83,4 +83,19 @@
     copyEl.textContent = 'Copyright © ' + new Date().getFullYear() + ' Molds&Coros';
   }
 
+
+  /* ================================================
+     7. CAROUSEL AUTO-SCROLL
+     ================================================ */
+  var carousel = document.querySelector('.models-carousel');
+  if (carousel) {
+    setInterval(function() {
+      if (carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 10) {
+        carousel.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        carousel.scrollBy({ left: 300, behavior: 'smooth' });
+      }
+    }, 2500);
+  }
+
 })();

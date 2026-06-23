@@ -832,4 +832,4 @@ p { color: #3F3F3F; line-height: 1.75; }
   filter: brightness(1.1);
 }
 .models-carousel { display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; padding: 1rem 0; }
-.models-carousel img { width: 220px; height: 200px; object-fit: cover; flex-shrink: 0; scroll-snap-align: start; border-radius: 10px; }
+.models-carousel img { height: 260px; width: auto; max-width: 90vw; object-fit: contain; flex-shrink: 0; scroll-snap-align: center; border-radius: 8px; }
