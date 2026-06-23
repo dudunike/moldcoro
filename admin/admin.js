@@ -911,6 +911,16 @@ function formatSeconds(s) {
 /* =============================================
    SETTINGS (PIXEL & ANALYTICS)
    ============================================= */
+var LS_PREFIX = 'moldscoros_setting_';
+
+function saveSettingLocal(key, val) {
+  try { localStorage.setItem(LS_PREFIX + key, val); } catch(e) {}
+}
+
+function loadSettingLocal(key) {
+  try { return localStorage.getItem(LS_PREFIX + key) || ''; } catch(e) { return ''; }
+}
+
 window.saveSetting = function(key, inputId, okId) {
   try {
     var val = document.getElementById(inputId).value.trim();
@@ -919,23 +929,23 @@ window.saveSetting = function(key, inputId, okId) {
     if (!btn && window.event) btn = window.event.target || window.event.srcElement;
     if (btn && btn.tagName === 'BUTTON') { btn.disabled = true; btn.textContent = 'Salvando...'; }
 
+    function onDone(fromCloud) {
+      if (btn && btn.tagName === 'BUTTON') { btn.disabled = false; btn.textContent = 'Salvar'; }
+      if (ok) { ok.style.display = 'inline'; setTimeout(function() { ok.style.display = 'none'; }, 2000); }
+      showToast(fromCloud ? 'Configuração salva!' : 'Salvo localmente (execute o SQL no Supabase para persistir na nuvem).', fromCloud ? 'success' : 'warn');
+    }
+
+    saveSettingLocal(key, val);
+
     sb.from('analytics_settings').upsert({ key: key, value: val, updated_at: new Date().toISOString() })
-      .then(function (res) {
-        if (btn && btn.tagName === 'BUTTON') { btn.disabled = false; btn.textContent = 'Salvar'; }
+      .then(function(res) {
         if (res.error) {
-          if (res.error.message.includes('relation') && res.error.message.includes('does not exist')) {
-            showToast('Erro: Tabela de configurações não existe! Execute o SQL do painel.', 'error');
-          } else {
-            showToast('Erro ao salvar: ' + res.error.message, 'error');
-          }
+          onDone(false);
         } else {
-          if(ok) {
-            ok.style.display = 'inline';
-            setTimeout(function () { ok.style.display = 'none'; }, 2000);
-          }
-          showToast('Configuração salva com sucesso!', 'success');
+          onDone(true);
         }
-      });
+      })
+      .catch(function() { onDone(false); });
   } catch(e) {
     console.error(e);
     showToast('Erro interno: ' + e.message, 'error');
@@ -943,18 +953,31 @@ window.saveSetting = function(key, inputId, okId) {
 };
 
 window.loadSettings = function() {
-  sb.from('analytics_settings').select('*').then(function(res) {
-    if (res.error) return;
-    var data = res.data || [];
-    data.forEach(function(row) {
+  function applySettings(rows) {
+    rows.forEach(function(row) {
       if (row.key === 'facebook_pixel_id') {
         var el = document.getElementById('facebookPixelId');
-        if(el) el.value = row.value || '';
+        if (el && row.value) el.value = row.value;
       }
       if (row.key === 'google_analytics_id') {
         var el = document.getElementById('googleAnalyticsId');
-        if(el) el.value = row.value || '';
+        if (el && row.value) el.value = row.value;
       }
     });
+  }
+
+  var localPixel = loadSettingLocal('facebook_pixel_id');
+  var localGA    = loadSettingLocal('google_analytics_id');
+  if (localPixel || localGA) {
+    applySettings([
+      { key: 'facebook_pixel_id', value: localPixel },
+      { key: 'google_analytics_id', value: localGA }
+    ]);
+  }
+
+  sb.from('analytics_settings').select('*').then(function(res) {
+    if (res.error || !res.data) return;
+    applySettings(res.data);
+    res.data.forEach(function(row) { saveSettingLocal(row.key, row.value || ''); });
   });
 };
