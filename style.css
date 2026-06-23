@@ -803,3 +803,12 @@ p { color: #3F3F3F; line-height: 1.75; }
   .testimonials-grid { max-width: 100%; }
   .btn--lg       { width: 100%; justify-content: center; }
 }
+/* CSS simplificado */
+.icon-carousel { display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; padding: 1rem 0; }
+.icon-carousel img { width: 80px; height: 80px; object-fit: contain; flex-shrink: 0; scroll-snap-align: start; }
+.imgbox__icon { width: 64px; height: 64px; object-fit: contain; margin: 1rem auto 0; }
+.imgbox__icon-sm { width: 48px; height: 48px; object-fit: contain; margin: 1rem auto 0; }
+.how-icon { width: 80px; height: 80px; object-fit: contain; margin: 1rem auto 0; }
+.trust-icon { width: 64px; height: 64px; object-fit: contain; }
+.plan__pay-img { width: 100%; max-width: 200px; margin: 1rem auto; display: block; object-fit: contain; }
+.testimonial-title { font-size: 1rem; color: #3F3F3F; font-style: italic; font-weight: 500; }
